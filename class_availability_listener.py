@@ -2,6 +2,7 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 import time
 from bs4 import BeautifulSoup
+import datetime
 
 options = Options()
 options.headless = True
@@ -12,7 +13,9 @@ browser = Firefox(options=options)
 
 x = True
 
-while x:
+
+def get_classes_num():
+    print("Please wait. Fetching data...")
     browser.get(search_url)
 
     time.sleep(1)
@@ -21,14 +24,22 @@ while x:
     table = data.find('table', {'id': 'CatalogList'})
     tbody = table.find('tbody')
 
-    classes = len(tbody.find_all('tr'))
+    return len(tbody.find_all('tr'))
 
-    print(classes)
 
-    if classes > 3:
+initialNum = get_classes_num()
+print("Currently there are " + str(initialNum) + " classes open")
+
+while x:
+    currentNum = get_classes_num()
+
+    if currentNum > initialNum:
+        print("Just opened! " + str(currentNum) + " open class found at " + str(datetime.datetime.now()))
         options.headless = False
         browser = Firefox(options=options)
         browser.get(search_url)
         x = False
+    else:
+        print("Still only " + str(currentNum) + " open classes at " + str(datetime.datetime.now()))
 
-    time.sleep(1)
+    time.sleep(10 * 60)  # checks every 10 minutes
