@@ -38,7 +38,7 @@ def get_student_roster(courses):
                 course_title = table.find('div', {'class': 'section'}).text
                 formatted_course_title = course_title[0:3] + '_' + course_title[4:7]
 
-                file_path_name_w_ext = './' + formatted_course_title + '.json'
+                file_path_name_w_ext = './courses/' + formatted_course_title + '.json'
                 with open(file_path_name_w_ext, 'w') as fp:
                     json.dump(students, fp)
 
@@ -46,12 +46,12 @@ def get_student_roster(courses):
                 break
             last_height = new_height
 
-    with open('./classes_list.json', 'w') as fp:
+    with open('./courses/classes_list.json', 'w') as fp:
         json.dump(files_list, fp)
 
 
 def get_classes():
-    browser.get(url_canvas + '/courses')
+    # browser.get(url_canvas + '/courses')
 
     source = browser.page_source
     data = BeautifulSoup(source, "html.parser")
@@ -66,7 +66,7 @@ def get_classes():
     get_student_roster(courses)
 
 
-def sign_in(username, password):
+def sign_in(username, password, duo):
     browser.get(url_canvas)
 
     username_selector = browser.find_element_by_id("username")
@@ -74,15 +74,33 @@ def sign_in(username, password):
     username_selector.send_keys(username)
     password_selector.send_keys(password)
     browser.find_element_by_class_name("submit").click()
-    time.sleep(0.5)
 
+    if duo:
+        input("When finished authenticating, press ENTER")
+
+    time.sleep(1)
     get_classes()
 
 
 def get_user_credentials():
     username = input("Please enter your ASU ID")
     password = input("Please enter your password")
-    sign_in(username, password)
+
+    while True:
+        duoInput = input(
+            "Does your account have duo authentication? (Y/N) If you don't know what this is Press N.").casefold()
+        duo = False
+
+        if duoInput == "y".casefold():
+            print("When you reach the authentication page, please authenticate and press enter in the terminal")
+            duo = True
+            break
+        elif duoInput == "n".casefold():
+            break
+        else:
+            print("Please enter Y or N")
+
+    sign_in(username, password, duo)
 
 
 if __name__ == '__main__':
