@@ -3,6 +3,7 @@ from selenium.webdriver.firefox.options import Options
 import time
 from bs4 import BeautifulSoup
 import datetime
+import sys
 
 options = Options()
 options.headless = True
@@ -22,9 +23,12 @@ def get_classes_num():
 
     data = BeautifulSoup(browser.page_source, "html.parser")
     table = data.find('table', {'id': 'CatalogList'})
-    tbody = table.find('tbody')
-
-    return len(tbody.find_all('tr'))
+    if table is not None:
+        tbody = table.find('tbody')
+        return len(tbody.find_all('tr'))
+    else:
+        print("No classes found. They're all gone!!")
+        sys.exit()
 
 
 initialNum = get_classes_num()
