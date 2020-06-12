@@ -3,7 +3,7 @@ import json
 common_person = []
 
 if __name__ == '__main__':
-    files_list = json.load(open("./classes_list.json", "r"))
+    files_list = json.load(open("./courses/classes_list.json", "r"))
 
     list_size = len(files_list)
 
