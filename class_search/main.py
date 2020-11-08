@@ -1,17 +1,21 @@
 from datetime import datetime
 
 
+# simply prints the menu
 def print_menu():
-    selected_option = -1
-
     print("\n-------------------------------")
     print("| Welcome to the ASU scripts! |")
     print("-------------------------------")
 
     print("\n[1] Use class code to check availability"
-          "\n[2] Check for all available classes for a course"
+          "\n[2] Check all available classes for a course"
           "\n[3] View your set alerts\n")
 
+
+# handles the user input and validation of the menu
+def get_menu_option():
+    selected_option = -1
+    print_menu()
     while True:
         selected_input = input("Please select an option: ")
         try:
@@ -173,15 +177,22 @@ def get_course_info():
     print(f"Selected semester")
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    get_subject()
+    subject = get_subject()
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    get_course_number()
+    course_number = get_course_number()
+
+    return [semester, subject, course_number]
 
 
 if __name__ == '__main__':
-    option = print_menu()
+    option = get_menu_option()
+
     if option is 1:
         get_class_code()
-    else:
+    elif option is 2:
         get_course_info()
+    elif option is 3:
+        pass
+    else:
+        print("Sorry, it seems you entered an invalid command.")
